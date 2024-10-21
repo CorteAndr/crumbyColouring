@@ -9,5 +9,6 @@ add_executable(naiveCrumbyColouring checkCrumbyColouring.cpp
         PARAMETERS.h)
 
 add_executable(smartCrumbyColouring checkCrumbyColouring.cpp
-                checkCrumbyColouring.h
-                PARAMETERS.h)
+        checkCrumbyColouring.h
+        PARAMETERS.h
+        smartCrumbyColouring.cpp)
