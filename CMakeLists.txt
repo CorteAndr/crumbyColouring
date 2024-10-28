@@ -6,9 +6,11 @@ set(CMAKE_CXX_STANDARD 11)
 add_executable(naiveCrumbyColouring checkCrumbyColouring.cpp
         naiveCrumbyColouring.cpp
         checkCrumbyColouring.h
-        PARAMETERS.h)
+        graphLoader.h
+        graphLoader.cpp)
 
 add_executable(smartCrumbyColouring checkCrumbyColouring.cpp
         checkCrumbyColouring.h
-        PARAMETERS.h
-        smartCrumbyColouring.cpp)
+        graphLoader.h
+        smartCrumbyColouring.cpp
+        graphLoader.cpp)

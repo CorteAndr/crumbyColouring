@@ -1,6 +1,0 @@
-#ifndef PARAMETERS_H
-#define PARAMETERS_H
-
-#define MAX_VERTICES 32
-
-#endif //PARAMETERS_H
