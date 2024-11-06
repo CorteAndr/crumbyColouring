@@ -1,0 +1,1 @@
+add_library(graphLoader STATIC graphLoader.cpp)

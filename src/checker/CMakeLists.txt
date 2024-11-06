@@ -1,0 +1,1 @@
+add_library(checker STATIC checkCrumbyColouring.cpp)

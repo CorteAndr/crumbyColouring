@@ -6,7 +6,7 @@
 #include "checkCrumbyColouring.h"
 
 
-bool naiveCrumbyColouring(const int numberOfVertices, std::vector<std::bitset<MAX_VERTICES>> &adjacencyList,
+int naiveCrumbyColouring(const int numberOfVertices, const std::vector<std::bitset<MAX_VERTICES>> &adjacencyList,
     const int nb_assignedVertices, std::bitset<MAX_VERTICES> &blueVertices, std::bitset<MAX_VERTICES> &redVertices) {
     // Recursively check if colouring a vertex blue or red will result in a crumby colouring
     if (nb_assignedVertices == numberOfVertices) {
@@ -14,27 +14,24 @@ bool naiveCrumbyColouring(const int numberOfVertices, std::vector<std::bitset<MA
     }
 
     blueVertices.set(nb_assignedVertices); // nb_assignedVertices is next unused vertex
-    if (naiveCrumbyColouring(numberOfVertices, adjacencyList, nb_assignedVertices + 1, blueVertices, redVertices)) {
-        return true;
-    }
+
+    int blueV = naiveCrumbyColouring(numberOfVertices, adjacencyList, nb_assignedVertices + 1,
+        blueVertices, redVertices);
     blueVertices.reset(nb_assignedVertices);
 
     redVertices.set(nb_assignedVertices);
-    if (naiveCrumbyColouring(numberOfVertices, adjacencyList, nb_assignedVertices + 1, blueVertices, redVertices)) {
-        return true;
-    }
+    int redV = naiveCrumbyColouring(numberOfVertices, adjacencyList, nb_assignedVertices + 1,
+        blueVertices, redVertices);
     redVertices.reset(nb_assignedVertices);
-    return false;
+
+    return blueV + redV;
 }
 
 
-int n;
-
-std::vector<std::bitset<MAX_VERTICES>> adjacencyList;
-std::bitset<MAX_VERTICES> blueVertices, redVertices;
-
-
 int main() {
+    std::vector<std::bitset<MAX_VERTICES>> adjacencyList;
+    std::bitset<MAX_VERTICES> blueVertices, redVertices;
+
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
@@ -44,14 +41,18 @@ int main() {
 
     while (getline(std::cin, line)) {
         numberOfGraphsRead++;
-        n = getNumberOfVertices(line);
+        int n = getNumberOfVertices(line);
         loadGraph(line, n, adjacencyList);
-        if (naiveCrumbyColouring(n, adjacencyList, 0, blueVertices, redVertices)) {
+        int num_of_colourings = naiveCrumbyColouring(n, adjacencyList, 0, blueVertices, redVertices);
+        if (num_of_colourings) {
             number_of_crumby_colourable_graphs++;
+            std::cout << "GRAPH: " << line << " has " << num_of_colourings << " crumby colourings" << std::endl;
+        } else {
+            std::cout << "GRAPH: " << line << " has no crumby colouring" << std::endl;
         }
     }
 
-    std::cout << number_of_crumby_colourable_graphs << "/" << numberOfGraphsRead << " Admit a crumby colouring" << std::endl;
+    std::cout << number_of_crumby_colourable_graphs << "/" << numberOfGraphsRead << " Graphs admit a crumby colouring" << std::endl;
 
     return 0;
 }
