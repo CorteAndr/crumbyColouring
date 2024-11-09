@@ -5,7 +5,7 @@
 
 #define MAX_VERTICES 32
 
-// Unsafe because no defined behaviour if character = 0. ctz and clz work with 32 bit numbers.
+// Unsafe because no defined behaviour if character = 0. ctz and clz work with 32bit numbers.
 #define unsafePrev(character, current) (__builtin_ctz(character) - current >= 0 ? -1 : current -__builtin_clz((character) << (32 - current)) - 1)
 
 #define prev(character,current) (character ? unsafePrev(character,current) : -1)

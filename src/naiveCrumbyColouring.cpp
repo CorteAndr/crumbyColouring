@@ -43,6 +43,7 @@ int main() {
         numberOfGraphsRead++;
         int n = getNumberOfVertices(line);
         loadGraph(line, n, adjacencyList);
+
         int num_of_colourings = naiveCrumbyColouring(n, adjacencyList, 0, blueVertices, redVertices);
         if (num_of_colourings) {
             number_of_crumby_colourable_graphs++;

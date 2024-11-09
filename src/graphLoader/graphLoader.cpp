@@ -1,3 +1,6 @@
+// ReSharper disable CppDFAConstantConditions
+
+// ReSharper disable CppDFAUnreachableCode
 #include "graphLoader.h"
 
 int getNumberOfVertices(const std::string &graphString) {
@@ -60,12 +63,12 @@ void loadGraph(const std::string &graphString, int numberOfVertices, std::vector
     int currVertex = 1;
     int sum = 0;
     for (int index = startIndex; index < graphString.size(); index++) {
-        for (int i = prev(graphString[index] - 63, 6); i != -1; i = prev(graphString[index], i)) {
+        for (int i = prev(graphString[index] - 63, 6); i != -1; i = prev(graphString[index] - 63, i)) {
             while (5-i + (index - startIndex)*6 - sum >= 0) {
                 sum += currVertex;
                 currVertex++;
             }
-            sum -= currVertex;
+            sum -= --currVertex;
             const int neighbour = 5-i+(index - startIndex)*6 - sum;
             adjacencyList[currVertex].set(neighbour);
             adjacencyList[neighbour].set(currVertex);
