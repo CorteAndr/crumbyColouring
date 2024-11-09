@@ -52,8 +52,9 @@ void loadGraph(const std::string &graphString, int numberOfVertices, std::vector
         abort();
     }
 
+    adjacencyList.reserve(numberOfVertices);
     for (int vertex = 0; vertex < numberOfVertices; vertex++) { // Initialize adjacencyList
-        adjacencyList.emplace_back();
+        adjacencyList[vertex] = std::bitset<MAX_VERTICES>(0);
     }
 
     int currVertex = 1;
