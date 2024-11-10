@@ -3,7 +3,7 @@
 
 #include <bits/stdc++.h>
 
-#define MAX_VERTICES 32
+#define MAX_VERTICES 48
 
 // Unsafe because no defined behaviour if character = 0. ctz and clz work with 32bit numbers.
 #define unsafePrev(character, current) (__builtin_ctz(character) - current >= 0 ? -1 : current -__builtin_clz((character) << (32 - current)) - 1)

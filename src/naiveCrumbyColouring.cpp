@@ -29,6 +29,7 @@ int naiveCrumbyColouring(const int numberOfVertices, const std::vector<std::bits
 
 
 int main() {
+    auto t_start = std::chrono::high_resolution_clock::now();
     std::vector<std::bitset<MAX_VERTICES>> adjacencyList;
     std::bitset<MAX_VERTICES> blueVertices, redVertices;
 
@@ -43,17 +44,19 @@ int main() {
         numberOfGraphsRead++;
         int n = getNumberOfVertices(line);
         loadGraph(line, n, adjacencyList);
-
         int num_of_colourings = naiveCrumbyColouring(n, adjacencyList, 0, blueVertices, redVertices);
         if (num_of_colourings) {
             number_of_crumby_colourable_graphs++;
-            std::cout << "GRAPH: " << line << " has " << num_of_colourings << " crumby colourings" << std::endl;
+            std::cout << "GRAPH: " << line << " has " << num_of_colourings << " crumby colourings\n";
         } else {
-            std::cout << "GRAPH: " << line << " has no crumby colouring" << std::endl;
+            std::cout << "GRAPH: " << line << " has no crumby colouring\n";
         }
+
     }
 
-    std::cout << number_of_crumby_colourable_graphs << "/" << numberOfGraphsRead << " Graphs admit a crumby colouring" << std::endl;
+    std::cout << number_of_crumby_colourable_graphs << "/" << numberOfGraphsRead << " Graphs admit a crumby colouring in "
+    << (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-t_start)).count()
+    << "ms" << std::endl;
 
     return 0;
 }

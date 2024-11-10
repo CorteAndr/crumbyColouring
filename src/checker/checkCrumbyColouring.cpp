@@ -42,7 +42,7 @@ const std::bitset<MAX_VERTICES> &blueVertices, const std::bitset<MAX_VERTICES> &
     return true;
 }
 
-// Check if a given vertex results in immediate constraint violation
+// False iff that vertex causes for an impossible constraint
 bool checkVertex(uint vertex, int numberOfVertices, const std::vector<std::bitset<MAX_VERTICES>> &adjacencyList,
     const std::bitset<MAX_VERTICES> &blueVertices, const std::bitset<MAX_VERTICES> &redVertices) {
     if (blueVertices.test(vertex)) {
@@ -61,11 +61,11 @@ bool checkVertex(uint vertex, int numberOfVertices, const std::vector<std::bitse
 
         switch (redInducedAdjacency.count()) {
             case 0:
-                return isIsolatedRed(vertex, numberOfVertices, adjacencyList, blueVertices, redVertices);
+                return !isIsolatedRed(vertex, numberOfVertices, adjacencyList, blueVertices, redVertices);
             case 1:
                 return true;
             case 2:
-                for (unsigned int w = redInducedAdjacency._Find_first(); // Everything before v is already checked
+                for (unsigned int w = redInducedAdjacency._Find_first();
                        w < numberOfVertices;
                        w = redInducedAdjacency._Find_next(w)) {
 
@@ -107,7 +107,7 @@ bool hasIsolatedRedNeighbour(uint vertex, int numberOfVertices, const std::vecto
 bool isIsolatedRed(uint vertex, int numberOfVertices, const std::vector<std::bitset<MAX_VERTICES>> &adjacencyList,
     const std::bitset<MAX_VERTICES> &blueVertices, const std::bitset<MAX_VERTICES> &redVertices) {
     if (redVertices.test(vertex)) {
-        return (adjacencyList[vertex] & ~blueVertices).none(); // vertex has no neighbours that are not blue
+        return adjacencyList[vertex] == blueVertices; // vertex has no neighbours that are not blue
     }
     printf("Error: Vertex %d is not coloured red", vertex);
     abort();
