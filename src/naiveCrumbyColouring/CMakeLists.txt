@@ -1,0 +1,3 @@
+add_library(naiveCrumbyColouring STATIC naiveCrumbyColouring.cpp)
+
+target_link_libraries(naiveCrumbyColouring PRIVATE graphLoader checker)

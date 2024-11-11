@@ -1,0 +1,3 @@
+add_library(prunedCrumbyColouring STATIC prunedCrumbyColouring.cpp)
+
+target_link_libraries(prunedCrumbyColouring PRIVATE checker graphLoader)
