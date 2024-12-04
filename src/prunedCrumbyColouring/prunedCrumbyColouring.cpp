@@ -142,3 +142,34 @@ int countPrunedCrumbyColourings(const int numberOfVertices, const vector<bitset<
 
     return 0;
 }
+
+
+bool hasPrunedCrumbyColouring(const int numberOfVertices, const vector<bitset<MAX_VERTICES>> &adjacencyList,
+    bitset<MAX_VERTICES> &unassignedVertices, bitset<MAX_VERTICES> &blueVertices, bitset<MAX_VERTICES> &redVertices) {
+            if (unassignedVertices.count() + blueVertices.count() + redVertices.count() < numberOfVertices)
+    {
+        // Every vertex must be colourable
+        return false;
+    }
+
+    if (unassignedVertices.any()) { // Check for any unassigned vertices
+        // Better next choice vertex?
+        uint v = findMostConstrainingVertex(numberOfVertices, adjacencyList, unassignedVertices);
+
+        // Colour v
+        if (colourVertexBlue(v, numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices) > 0) {
+            return true;
+        }
+
+        if (colourVertexRed(v, numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices) > 0) {
+            return true
+        }
+
+        return false;
+    }
+
+    if(checkCrumbyColouring(numberOfVertices, adjacencyList, blueVertices, redVertices))
+        return true;
+
+    return false;
+    }
