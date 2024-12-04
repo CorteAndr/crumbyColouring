@@ -7,7 +7,10 @@
 
 #include "graphLoader.h"
 
-int naiveCrumbyColouring(int numberOfVertices, const std::vector<std::bitset<MAX_VERTICES>> &adjacencyList,
+int countNaiveCrumbyColourings(int numberOfVertices, const std::vector<std::bitset<MAX_VERTICES>> &adjacencyList,
+    int nb_assignedVertices, std::bitset<MAX_VERTICES> &blueVertices, std::bitset<MAX_VERTICES> &redVertices);
+
+bool hasNaiveCrumbyColouring(int numberOfVertices, const std::vector<std::bitset<MAX_VERTICES>> &adjacencyList,
     int nb_assignedVertices, std::bitset<MAX_VERTICES> &blueVertices, std::bitset<MAX_VERTICES> &redVertices);
 
 #endif //NAIVECRUMBYCOLOURING_H

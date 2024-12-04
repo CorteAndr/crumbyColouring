@@ -16,19 +16,14 @@ int main() {
         numberOfGraphsRead++;
         int n = getNumberOfVertices(line);
         loadGraph(line, n, adjacencyList);
-        auto t1 = std::chrono::high_resolution_clock::now();
-        int num_of_colourings = naiveCrumbyColouring(n, adjacencyList, 0, blueVertices, redVertices);
-        if (num_of_colourings)
-        {
+        if (hasNaiveCrumbyColouring(n, adjacencyList, 0, blueVertices, redVertices)) {
             number_of_crumby_colourable_graphs++;
+        } else {
+            std::cout << line << std::endl;
         }
-        std::cout << line << " " << num_of_colourings << " " <<
-                std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()-t1).count()
-                << std::endl;
-
     }
 
-    std::cout << number_of_crumby_colourable_graphs << "/" << numberOfGraphsRead << " Graphs admit a crumby colouring in "
+    std::cerr << number_of_crumby_colourable_graphs << "/" << numberOfGraphsRead << " Graphs admit a crumby colouring in "
     << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-t_start).count()
     << "ms" << std::endl;
 

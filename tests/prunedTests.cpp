@@ -15,7 +15,7 @@ TEST(PrunedTest, ThomasBellittoCounterExample)
     for (int i=0; i < n; i++)
         unassignedVertices.set(i);
 
-    EXPECT_FALSE(prunedCrumbyColouring(n, adjacencyList, unassignedVertices, blueVertices, redVertices));
+    EXPECT_FALSE(countPrunedCrumbyColourings(n, adjacencyList, unassignedVertices, blueVertices, redVertices));
 }
 
 TEST(PrunedTest, equalsNaiveForSubCubicBipartiteGraphs)
@@ -40,8 +40,8 @@ TEST(PrunedTest, equalsNaiveForSubCubicBipartiteGraphs)
         for (int i=0; i < n; i++)
             unassignedVertices.set(i);
 
-        int pruned = prunedCrumbyColouring(n, adjacencyList, unassignedVertices, blueVertices, redVertices);
-        int naive = naiveCrumbyColouring(n, adjacencyList, 0, blueVertices, redVertices);
+        int pruned = countPrunedCrumbyColourings(n, adjacencyList, unassignedVertices, blueVertices, redVertices);
+        int naive = countNaiveCrumbyColourings(n, adjacencyList, 0, blueVertices, redVertices);
 
         // Test if pruned gives
         ASSERT_EQ(pruned, naive);

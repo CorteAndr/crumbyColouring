@@ -43,7 +43,7 @@ int colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_
             return 0;
         }
 
-        int blueV = prunedCrumbyColouring(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
+        int blueV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
         blueVertices.reset(vertex);
         unassignedVertices.set(vertex);
         return blueV;
@@ -77,7 +77,7 @@ int colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_
             return 0;
         }
 
-        int blueV = prunedCrumbyColouring(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
+        int blueV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
         blueVertices.reset(vertex);
         unassignedVertices.set(vertex);
 
@@ -107,7 +107,7 @@ int colourVertexRed(uint vertex, int numberOfVertices, const vector<bitset<MAX_V
         return 0;
     }
 
-    int redV = prunedCrumbyColouring(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
+    int redV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
 
     unassignedVertices.set(vertex);
     redVertices.reset(vertex);
@@ -116,7 +116,7 @@ int colourVertexRed(uint vertex, int numberOfVertices, const vector<bitset<MAX_V
 }
 
 
-int prunedCrumbyColouring(const int numberOfVertices, const vector<bitset<MAX_VERTICES>> &adjacencyList,
+int countPrunedCrumbyColourings(const int numberOfVertices, const vector<bitset<MAX_VERTICES>> &adjacencyList,
     bitset<MAX_VERTICES> &unassignedVertices, bitset<MAX_VERTICES> &blueVertices, bitset<MAX_VERTICES> &redVertices) {
 
     if (unassignedVertices.count() + blueVertices.count() + redVertices.count() < numberOfVertices)
