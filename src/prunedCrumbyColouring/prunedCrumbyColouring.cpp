@@ -162,7 +162,7 @@ bool hasPrunedCrumbyColouring(const int numberOfVertices, const vector<bitset<MA
         }
 
         if (colourVertexRed(v, numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices) > 0) {
-            return true
+            return true;
         }
 
         return false;
