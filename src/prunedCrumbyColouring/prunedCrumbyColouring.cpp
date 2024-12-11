@@ -24,7 +24,7 @@ unsigned int findMostConstrainingVertex(const int numberOfVertices, const vector
 int findLeastConstrainingVertex();
 
 
-int colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_VERTICES>> &adjacencyList,
+bool colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_VERTICES>> &adjacencyList,
     bitset<MAX_VERTICES> &unassignedVertices, bitset<MAX_VERTICES> &blueVertices, bitset<MAX_VERTICES> &redVertices)
 {
 
@@ -40,10 +40,10 @@ int colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_
         {
             blueVertices.reset(vertex);
             unassignedVertices.set(vertex);
-            return 0;
+            return false;
         }
 
-        int blueV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
+        bool blueV = hasPrunedCrumbyColouring(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
         blueVertices.reset(vertex);
         unassignedVertices.set(vertex);
         return blueV;
@@ -60,7 +60,7 @@ int colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_
         {
             blueVertices.reset(vertex);
             unassignedVertices.set(vertex);
-            return 0;
+            return false;
         }
         // Colour all unassigned neighbours of vertex and w red
         bitset<MAX_VERTICES> adjacentUnassigned = (adjacencyList[vertex] | adjacencyList[w]) & unassignedVertices;
@@ -72,12 +72,14 @@ int colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_
         if (hasIsolatedRedNeighbour(vertex, numberOfVertices, adjacencyList, blueVertices, redVertices) ||
             hasIsolatedRedNeighbour(w, numberOfVertices, adjacencyList, blueVertices, redVertices))
         {
+            unassignedVertices |= adjacentUnassigned;
+            redVertices &= ~adjacentUnassigned;
             blueVertices.reset(vertex);
             unassignedVertices.set(vertex);
-            return 0;
+            return false;
         }
 
-        int blueV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
+        bool blueV = hasPrunedCrumbyColouring(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
         blueVertices.reset(vertex);
         unassignedVertices.set(vertex);
 
@@ -90,11 +92,11 @@ int colourVertexBlue(uint vertex, int numberOfVertices, const vector<bitset<MAX_
 
     blueVertices.reset(vertex);
     unassignedVertices.set(vertex);
-    return 0;
+    return false;
 }
 
 
-int colourVertexRed(uint vertex, int numberOfVertices, const vector<bitset<MAX_VERTICES>> &adjacencyList,
+bool colourVertexRed(uint vertex, int numberOfVertices, const vector<bitset<MAX_VERTICES>> &adjacencyList,
     bitset<MAX_VERTICES> &unassignedVertices, bitset<MAX_VERTICES> &blueVertices, bitset<MAX_VERTICES> &redVertices)
 {
     unassignedVertices.reset(vertex);
@@ -104,10 +106,10 @@ int colourVertexRed(uint vertex, int numberOfVertices, const vector<bitset<MAX_V
     {
         unassignedVertices.set(vertex);
         redVertices.reset(vertex);
-        return 0;
+        return false;
     }
 
-    int redV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
+    bool redV = hasPrunedCrumbyColouring(numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
 
     unassignedVertices.set(vertex);
     redVertices.reset(vertex);
@@ -129,10 +131,90 @@ int countPrunedCrumbyColourings(const int numberOfVertices, const vector<bitset<
         // Better next choice vertex?
         uint v = findMostConstrainingVertex(numberOfVertices, adjacencyList, unassignedVertices);
 
-        // Colour v
-        int blueV = colourVertexBlue(v, numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
 
-        int redV = colourVertexRed(v, numberOfVertices, adjacencyList, unassignedVertices, blueVertices, redVertices);
+        // Colour blue
+        int blueV = 0;
+
+        uint blueNeighbourCount = (adjacencyList[v] & blueVertices).count();
+        if (blueNeighbourCount == 0) {  // Blue CASE 1
+
+            // Colour v blue
+            unassignedVertices.reset(v);
+            blueVertices.set(v);
+
+            //  Isolation constraint
+            if (hasIsolatedRedNeighbour(v, numberOfVertices, adjacencyList, blueVertices, redVertices))
+            {
+                // Reset v
+                blueVertices.reset(v);
+                unassignedVertices.set(v);
+            } else {
+
+                blueV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices,
+                                                    blueVertices, redVertices);
+                // Reset v
+                blueVertices.reset(v);
+                unassignedVertices.set(v);
+            }
+        } else if (blueNeighbourCount == 1) { // Blue CASE 2
+            // Colour v blue
+            unassignedVertices.reset(v);
+            blueVertices.set(v);
+            const uint w = (adjacencyList[v] & blueVertices)._Find_first(); // The blue neighbour of vertex
+
+            if  ((adjacencyList[w] & blueVertices).count() > 1)
+            {
+                blueVertices.reset(v);
+                unassignedVertices.set(v);
+            } else {
+                // Colour all unassigned neighbours of vertex and w red
+                bitset<MAX_VERTICES> adjacentUnassigned =
+                        (adjacencyList[v] | adjacencyList[w]) & unassignedVertices;
+                redVertices |= adjacentUnassigned; // Colour red
+                unassignedVertices &= ~adjacentUnassigned; // Remove from unassigned
+
+                // Check if vertex or w has any isolated red neighbours
+                if (hasIsolatedRedNeighbour(v, numberOfVertices, adjacencyList, blueVertices, redVertices) ||
+                    hasIsolatedRedNeighbour(w, numberOfVertices, adjacencyList, blueVertices, redVertices)) {
+
+                    // Reset v and all other coloured vertices
+                    unassignedVertices |= adjacentUnassigned;
+                    redVertices &= ~adjacentUnassigned;
+                    blueVertices.reset(v);
+                    unassignedVertices.set(v);
+                } else {
+
+                    blueV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices,
+                                                        blueVertices, redVertices);
+                    // Reset v
+                    blueVertices.reset(v);
+                    unassignedVertices.set(v);
+
+                    unassignedVertices |= adjacentUnassigned;
+                    redVertices &= ~adjacentUnassigned;
+                }
+            }
+        }
+
+        // Colour v RED
+        int redV = 0;
+
+        unassignedVertices.reset(v);
+        redVertices.set(v);
+
+        if (!checkVertex(v, numberOfVertices, adjacencyList, blueVertices, redVertices))
+        {
+            unassignedVertices.set(v);
+            redVertices.reset(v);
+        } else {
+
+            redV = countPrunedCrumbyColourings(numberOfVertices, adjacencyList, unassignedVertices, blueVertices,
+                                                   redVertices);
+
+            unassignedVertices.set(v);
+            redVertices.reset(v);
+        }
+
 
         return blueV + redV;
     }
