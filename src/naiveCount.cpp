@@ -3,7 +3,7 @@
 int main() {
     auto t_start = std::chrono::high_resolution_clock::now();
     std::vector<std::bitset<MAX_VERTICES>> adjacencyList;
-    std::bitset<MAX_VERTICES> blueVertices, redVertices;
+
 
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
@@ -13,6 +13,7 @@ int main() {
     int number_of_crumby_colourable_graphs = 0;
 
     while (getline(std::cin, line)) {
+        std::bitset<MAX_VERTICES> blueVertices, redVertices = std::bitset<MAX_VERTICES>();
         numberOfGraphsRead++;
         int n = getNumberOfVertices(line);
         loadGraph(line, n, adjacencyList);
@@ -21,10 +22,9 @@ int main() {
         if (num_of_colourings)
         {
             number_of_crumby_colourable_graphs++;
+        } else {
+            std::cout << line << std::endl;
         }
-        std::cout << line << " " << num_of_colourings << " " <<
-                std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()-t1).count()
-                << std::endl;
 
     }
 
